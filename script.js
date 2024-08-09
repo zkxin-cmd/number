@@ -17,14 +17,17 @@ function generateRandomNumbers() {
         const randomNumbers = [];
         let sum = 0;
 
-        // Generate count - 1 random integers
         for (let i = 0; i < count - 1; i++) {
-            const num = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+            const remainingCount = count - i - 1;
+            const targetSumForRemaining = (average * count) - sum;
+            const maxPossible = Math.min(maxRange, targetSumForRemaining - minRange * remainingCount);
+            const minPossible = Math.max(minRange, targetSumForRemaining - maxRange * remainingCount);
+
+            const num = Math.floor(Math.random() * (maxPossible - minPossible + 1)) + minPossible;
             randomNumbers.push(num);
             sum += num;
         }
 
-        // Calculate the last number to ensure the average is correct
         const lastNumber = Math.round(average * count - sum);
         if (lastNumber < minRange || lastNumber > maxRange) {
             alert("计算出的最后一个数不在指定范围内，请调整输入！");
@@ -32,7 +35,6 @@ function generateRandomNumbers() {
         }
         randomNumbers.push(lastNumber);
 
-        // Create and append the element for this group
         const groupDiv = document.createElement('div');
         groupDiv.className = 'random-group';
         randomNumbers.forEach(num => {
